@@ -1,0 +1,5 @@
+----Docker Compose----
+docker-compose up #for bringing all the containers up together
+docker-compose down #halting all the containers
+docker-compose down --rmi all --volumes --remove-orphans #Clean-up
+docker system prune -a  #remove all docker containers & images

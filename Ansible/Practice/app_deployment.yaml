@@ -1,0 +1,26 @@
+---
+- name: Deploy Flask Application
+  hosts: appservers
+  become: yes
+  vars:
+    app_dir: /var/www/flask_app
+  tasks:
+    - name: Install Python and pip
+      apt:
+        name:
+          - python3
+          - python3-pip
+        state: present
+
+    - name: Install Flask
+      pip:
+        name: flask
+        state: present
+
+    - name: Copy application code
+      copy:
+        src: files/app.py
+        dest: "{{ app_dir }}/app.py"
+
+    - name: Start Flask application
+      command: "nohup python3 {{ app_dir }}/app.py &"

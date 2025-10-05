@@ -1,0 +1,31 @@
+---
+- name: Configure Database Servers
+  hosts: dbservers
+  become: yes
+  vars:
+    db_name: mydatabase
+    db_user: dbadmin
+    db_password: securepassword
+  tasks:
+    - name: Install MySQL
+      apt:
+        name: mysql-server
+        state: latest
+
+    - name: Start MySQL service
+      service:
+        name: mysql
+        state: started
+        enabled: true
+
+    - name: Create database
+      mysql_db:
+        name: "{{ db_name }}"
+        state: present
+
+    - name: Create database user
+      mysql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        priv: "{{ db_name }}.*:ALL"
+        state: present

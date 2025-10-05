@@ -1,0 +1,25 @@
+---
+- name: Manage Firewall Rules
+  hosts: all
+  become: yes
+  tasks:
+    - name: Allow HTTP traffic
+      ufw:
+        rule: allow
+        port: 80
+        proto: tcp
+
+    - name: Allow HTTPS traffic
+      ufw:
+        rule: allow
+        port: 443
+        proto: tcp
+
+    - name: Deny all other incoming traffic
+      ufw:
+        default: deny
+        direction: incoming
+
+    - name: Enable UFW
+      ufw:
+        state: enabled

@@ -1,0 +1,16 @@
+---
+- name: Configure Network Devices
+  hosts: network_devices
+  gather_facts: no
+  connection: network_cli
+  tasks:
+    - name: Configure interface descriptions
+      ios_config:
+        lines:
+          - description Configured by Ansible
+        parents: interface GigabitEthernet0/1
+
+    - name: Save running configuration
+      ios_command:
+        commands:
+          - write memory

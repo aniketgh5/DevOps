@@ -1,0 +1,65 @@
+************Docker & Container************
+###How to containarize and application and publish it#####
+step by step guide (Based on my experience)
+
+-->Download/create webpage (wget any webpage from tooplate.com)
+-->Unzip
+-->Put it inside a folder as tar ball (e.g: nano.tar.gz)
+*tar czvf nano.tar.gz *
+
+vim Dockerfile
+-->Write Docker file
+FROM --> Image such as 'ubuntu' and its tag: such as 'latest'
+LABEL --> Author, project etc. inside individual double quotes and equal sign.
+ENV DEBIAN_FRONTEND=noninteractive #for non-interactive docker build
+RUN --> command to run/install dependencies
+CMD --> initiate ctl. viz. /usr/sbin/apache2ctl
+EXPOSE --> port viz. 80
+WORKDIR --> /var/www/html
+VOLUME /var/log/apache2
+ADD --> instruction. Mention tar ball (it will untar) nano.tar.gz /var/www/html
+:wq!
+
+Run Docker build command:
+Ubuntu:~/images/nano$ docker build -t nanoimg:V2 .
+
+Containarize the website:
+Ubuntu:~/images/nano$ docker run -d --name nanowebsite -p 9080:80 nanoimg:V2
+
+Chcek status:
+docker ps
+
+now check in browser if it is built successfully:
+get ip address (public IP from AWS EC2/ ip addr show-inet ip from VM)
+
+go to browser and type: http://192.168.1.11:9080/
+
+It's working!
+
+****PUSH to DockerHub/ Host this image in DockerHub Repo*****
+1)Build the docker image with your DockerHub user name again.
+	docker build -t jhasantosh/nanoimg:V2 . # dot in the last represent present dir
+
+2)Login to docker from CLI
+	docker login
+3)Push image to dockerhub
+	docker push jhasantosh/nanoimg:V2
+4)Go to DockerHub and chcek your pushed repo.
+	Hurrey! Its a public repo now!
+
+*****Local/VM cleaning******
+docker ps -a
+docker stop <ContainerID> #Stop
+docker rm <ContainerID> #Remove the container
+docker images
+docker rmi <image1> <image2> #Remove the images (no need now as they are pushed on DockerHub)
+
+*****Run Docker run command with DockerHub public image path*****
+	docker run -d --name nanowebsite -p 9080:80 jhasantosh/nanoimg:V2
+-->Now anybody in the world can run this command and will have exactly same image as I have.
+	docker ps #can see the container running
+
+******Check the running website again in the browser with host machine IP****
+http://192.168.1.11:9080/
+
+It's working!
